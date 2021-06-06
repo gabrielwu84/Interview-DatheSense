@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - pgdb:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  redis:
+    image: "redis:alpine"
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - docs:/docs
+    ports:
+      - "8000:8000"
+  celery:
+    build: .
+    command: celery -A dathesense worker -l info
+    volumes:
+      - .:/app
+      - docs:/docs
+    depends_on:
+      - db
+      - redis
+  test:
+    build: .
+    command: python manage.py test
+    depends_on:
+      - db
+      - redis
+      - web
+      - celery
+    
+volumes:
+  docs:
+  pgdb:
