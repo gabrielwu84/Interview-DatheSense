@@ -1,7 +1,7 @@
 # Introduction
 A Django REST API backend of system that is able to save files and analyze the files' sensitivity score. 
 
-Project uses the follwoing containers:
+Project uses the following containers:
 - Postgres container as RDBMS
 - redis container for MQ
 - Celery container to compute sensitivity score asynchronously
